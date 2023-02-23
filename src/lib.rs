@@ -33,7 +33,7 @@ fn reconstruct_surface<'a>(
     max_relaxation_iters: usize,
 ) -> PyResult<&'a PyArray2<Real>> {
     if !points.is_contiguous() | !normals.is_c_contiguous() {
-        panic!("The numpy arrays in this function must be contigious")
+        panic!("The numpy arrays in this function must be contiguous")
     }
     let prepared_points = Point3::from(Vector3::from_vec(points.to_vec()?));
     let prepared_normals = Vector3::from_vec(normals.to_vec()?);

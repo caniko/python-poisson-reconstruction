@@ -23,3 +23,6 @@ dependencies = ["numpy >= 1.16.0"]
 [project.urls]
 homepage = "https://github.com/caniko/poisson-reconstruction"
 repository = "https://github.com/caniko/poisson-reconstruction"
+
+[project.optional-dependencies]
+test = ["pytest", "open3d"]

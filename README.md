@@ -1,5 +1,5 @@
 # Poisson surface reconstruction in Python
-Bindings for poisson surface reconstruction written in Rust for Python!
+Small Python package with bindings for [poisson reconstruction](https://github.com/ForesightMiningSoftwareCorporation/PoissonReconstruction) written in Rust!
 
 ## Install
 ```shell
