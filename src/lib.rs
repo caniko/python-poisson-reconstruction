@@ -15,6 +15,7 @@ fn vec_point3_to_pyarray<'a>(
         data.push(point.y);
         data.push(point.z);
     }
+
     Ok(Array2::from_shape_vec((nrows, 3), data)
         .expect("Failed to convert result into array")
         .into_pyarray(py))
