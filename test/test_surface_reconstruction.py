@@ -14,5 +14,11 @@ def test_surface_reconstruction():
     pcd.estimate_normals()
     pcd.orient_normals_consistent_tangent_plane(k=20)
 
-    points, normals = np.ascontiguousarray(pcd.points), np.ascontiguousarray(pcd.normals)
-    reconstruct_surface(points, normals, screening=0.0, density_estimation_depth=9, max_depth=9, max_relaxation_iters=10)
+    reconstruct_surface(
+        np.ascontiguousarray(pcd.points),
+        np.ascontiguousarray(pcd.normals),
+        screening=0.0,
+        density_estimation_depth=9,
+        max_depth=9,
+        max_relaxation_iters=10,
+    )
