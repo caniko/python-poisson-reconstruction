@@ -2,7 +2,9 @@ use ::poisson_reconstruction::{PoissonReconstruction, Real};
 use numpy::{PyArray2, PyReadonlyArray2};
 use pyo3::prelude::*;
 
-use crate::helper::{vec_point3_to_pyarray, convert_pyarray2_to_vector3, convert_pyarray2_to_point3};
+use crate::helper::{
+    convert_pyarray2_to_point3, convert_pyarray2_to_vector3, vec_point3_to_pyarray,
+};
 
 mod helper;
 

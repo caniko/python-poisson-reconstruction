@@ -29,5 +29,5 @@ repository = "https://github.com/caniko/poisson-reconstruction"
 [project.optional-dependencies]
 test = ["pytest", "open3d"]
 
-[tool.pytest.ini_options]
+[tool.pytest]
 env = ["RUST_BACKTRACE=full"]
