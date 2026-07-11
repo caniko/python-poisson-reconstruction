@@ -6,7 +6,7 @@ edition = "2021"
 authors = ["Can H. Tartanoglu <canhtart@gmail.com"]
 keywords = ["surface", "reconstruction", "poisson", "implicit"]
 
-license = "BSD-4"
+license = "MIT OR Apache-2.0"
 readme = "README.md"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
