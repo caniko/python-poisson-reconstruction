@@ -1,4 +1,11 @@
 # Poisson surface reconstruction in Python
+
+<!-- simit:badges:start -->
+
+[![Nix](https://img.shields.io/badge/Nix-managed-5277c3)](flake.nix) [![crates.io](https://img.shields.io/badge/crates.io-ready-f46623)](https://crates.io/crates/poisson-reconstruction)
+
+<!-- simit:badges:end -->
+
 Small Python package with bindings for [poisson reconstruction](https://github.com/ForesightMiningSoftwareCorporation/PoissonReconstruction) written in Rust!
 
 ## Install
