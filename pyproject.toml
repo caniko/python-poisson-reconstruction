@@ -4,6 +4,7 @@ build-backend = "maturin"
 
 [project]
 name = "poisson-reconstruction"
+version = "0.1.0"
 authors = [
   { name="Can H. Tartanoglu", email="canhtart@gmail.com" },
 ]
