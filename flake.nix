@@ -2,10 +2,11 @@
   description = "Rust project";
 
   inputs = {
-    rs-harbor.url = "git+ssh://git@github.com/caniko/rs-harbor.git?ref=trunk&rev=05cc4f162b55fa904b687db1821e2463fa813e50";
-    nixpkgs.follows = "rs-harbor/nixpkgs";
-    rust-overlay.follows = "rs-harbor/rust-overlay";
-    crane.follows = "rs-harbor/crane";
+    harbor-rs.url = "git+ssh://git@github.com/caniko/harbor-rs.git?ref=trunk&rev=05cc4f162b55fa904b687db1821e2463fa813e50";
+    rs-harbor.follows = "harbor-rs";
+    nixpkgs.follows = "harbor-rs/nixpkgs";
+    rust-overlay.follows = "harbor-rs/rust-overlay";
+    crane.follows = "harbor-rs/crane";
     flake-utils.url = "github:numtide/flake-utils";
     treefmt-nix.url = "github:numtide/treefmt-nix";
     git-hooks.url = "github:cachix/git-hooks.nix";
@@ -13,7 +14,7 @@
 
   outputs = {
     self,
-    rs-harbor,
+    harbor-rs,
     nixpkgs,
     rust-overlay,
     crane,
@@ -28,12 +29,12 @@
         overlays = [(import rust-overlay)];
       };
 
-      toolchain = rs-harbor.lib.mkToolchain {inherit pkgs; toolchainProfile = "stable";};
+      toolchain = harbor-rs.lib.mkToolchain {inherit pkgs; toolchainProfile = "stable";};
       inherit (toolchain) craneLib rustToolchain;
-      buildCache = rs-harbor.lib.mkBuildCachePolicy {
+      buildCache = harbor-rs.lib.mkBuildCachePolicy {
         inherit pkgs;
         buildPackageSet = pkgs.buildPackages;
-        sccachePackage = rs-harbor.packages.${system}.sccache;
+        sccachePackage = harbor-rs.packages.${system}.sccache;
         cacheRoot = null;
         namespaceScope = "canix-rust";
         namespaceGeneration = 5;
