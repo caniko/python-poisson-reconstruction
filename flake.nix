@@ -28,7 +28,10 @@
         overlays = [(import rust-overlay)];
       };
 
-      toolchain = harbor-rs.lib.mkToolchain {inherit pkgs; toolchainProfile = "stable";};
+      toolchain = harbor-rs.lib.mkToolchain {
+        inherit pkgs;
+        toolchainProfile = "stable";
+      };
       inherit (toolchain) craneLib rustToolchain;
       buildCache = harbor-rs.lib.mkBuildCachePolicy {
         inherit pkgs;
@@ -71,31 +74,33 @@
       };
       devShells.default = craneLib.devShell {
         checks = self.checks.${system};
-        packages = with pkgs; [
-          maturin
-          cargo-about
-          cargo-audit
-          cargo-cyclonedx
-          cargo-deny
-          cargo-llvm-cov
-          cargo-sbom
-          cargo-nextest
-          cosign
-          file
-          gnutar
-          gzip
-          jq
-          minisign
-          nodejs
-          pre-commit
-          rpm
-          util-linux
-          unzip
-          zip
-          reprepro
-          rust-analyzer
-          taplo
-        ] ++ pre-commit-check.enabledPackages;
+        packages = with pkgs;
+          [
+            maturin
+            cargo-about
+            cargo-audit
+            cargo-cyclonedx
+            cargo-deny
+            cargo-llvm-cov
+            cargo-sbom
+            cargo-nextest
+            cosign
+            file
+            gnutar
+            gzip
+            jq
+            minisign
+            nodejs
+            pre-commit
+            rpm
+            util-linux
+            unzip
+            zip
+            reprepro
+            rust-analyzer
+            taplo
+          ]
+          ++ pre-commit-check.enabledPackages;
         shellHook = pre-commit-check.shellHook;
       };
       apps.local-check-fast = {
