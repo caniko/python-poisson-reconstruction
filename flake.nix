@@ -32,7 +32,7 @@
         inherit pkgs;
         toolchainProfile = "stable";
       };
-      inherit (toolchain) craneLib rustToolchain;
+      inherit (toolchain) craneLib rawCraneLib rustToolchain;
       buildCache = harbor-rs.lib.mkBuildCachePolicy {
         inherit pkgs;
         buildPackageSet = pkgs.buildPackages;
@@ -45,11 +45,18 @@
       commonArgs = {
         inherit src;
         strictDeps = true;
+        nativeBuildInputs = [pkgs.python311];
+        PYO3_PYTHON = "${pkgs.python311}/bin/python";
       };
       cargoArtifacts = craneLib.buildDepsOnly commonArgs;
       package = buildCache.withRustCache {
         package = craneLib.buildPackage (commonArgs // {inherit cargoArtifacts;});
       };
+      checkCargoArtifacts = rawCraneLib.buildDepsOnly commonArgs;
+      uncachedPackage = rawCraneLib.buildPackage (commonArgs
+        // {
+          cargoArtifacts = checkCargoArtifacts;
+        });
       treefmtEval = treefmt-nix.lib.evalModule pkgs (import ./nix/treefmt.nix);
       pre-commit-check = git-hooks.lib.${system}.run {
         src = ./.;
@@ -61,13 +68,14 @@
       };
     in {
       packages.default = package;
+      packages.uncached = uncachedPackage;
       formatter = treefmtEval.config.build.wrapper;
       checks = {
-        default = package;
+        default = uncachedPackage;
         formatting = treefmtEval.config.build.check self;
-        clippy = craneLib.cargoClippy (commonArgs
+        clippy = rawCraneLib.cargoClippy (commonArgs
           // {
-            inherit cargoArtifacts;
+            cargoArtifacts = checkCargoArtifacts;
             cargoClippyExtraArgs = "--all-targets --all-features -- --deny warnings";
           });
         fmt = craneLib.cargoFmt {inherit src;};
