@@ -71,7 +71,8 @@
       packages.uncached = uncachedPackage;
       formatter = treefmtEval.config.build.wrapper;
       checks = {
-        default = uncachedPackage;
+        default = package;
+        uncached = uncachedPackage;
         formatting = treefmtEval.config.build.check self;
         clippy = rawCraneLib.cargoClippy (commonArgs
           // {
