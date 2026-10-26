@@ -28,8 +28,11 @@
         overlays = [(import rust-overlay)];
       };
 
-      toolchain = harbor-rs.lib.mkToolchain {inherit pkgs; toolchainProfile = "stable";};
-      inherit (toolchain) craneLib rustToolchain;
+      toolchain = harbor-rs.lib.mkToolchain {
+        inherit pkgs;
+        toolchainProfile = "stable";
+      };
+      inherit (toolchain) craneLib rawCraneLib rustToolchain;
       buildCache = harbor-rs.lib.mkBuildCachePolicy {
         inherit pkgs;
         buildPackageSet = pkgs.buildPackages;
@@ -42,11 +45,18 @@
       commonArgs = {
         inherit src;
         strictDeps = true;
+        nativeBuildInputs = [pkgs.python311];
+        PYO3_PYTHON = "${pkgs.python311}/bin/python";
       };
       cargoArtifacts = craneLib.buildDepsOnly commonArgs;
       package = buildCache.withRustCache {
         package = craneLib.buildPackage (commonArgs // {inherit cargoArtifacts;});
       };
+      checkCargoArtifacts = rawCraneLib.buildDepsOnly commonArgs;
+      uncachedPackage = rawCraneLib.buildPackage (commonArgs
+        // {
+          cargoArtifacts = checkCargoArtifacts;
+        });
       treefmtEval = treefmt-nix.lib.evalModule pkgs (import ./nix/treefmt.nix);
       pre-commit-check = git-hooks.lib.${system}.run {
         src = ./.;
@@ -58,44 +68,48 @@
       };
     in {
       packages.default = package;
+      packages.uncached = uncachedPackage;
       formatter = treefmtEval.config.build.wrapper;
       checks = {
         default = package;
+        uncached = uncachedPackage;
         formatting = treefmtEval.config.build.check self;
-        clippy = craneLib.cargoClippy (commonArgs
+        clippy = rawCraneLib.cargoClippy (commonArgs
           // {
-            inherit cargoArtifacts;
+            cargoArtifacts = checkCargoArtifacts;
             cargoClippyExtraArgs = "--all-targets --all-features -- --deny warnings";
           });
         fmt = craneLib.cargoFmt {inherit src;};
       };
       devShells.default = craneLib.devShell {
         checks = self.checks.${system};
-        packages = with pkgs; [
-          maturin
-          cargo-about
-          cargo-audit
-          cargo-cyclonedx
-          cargo-deny
-          cargo-llvm-cov
-          cargo-sbom
-          cargo-nextest
-          cosign
-          file
-          gnutar
-          gzip
-          jq
-          minisign
-          nodejs
-          pre-commit
-          rpm
-          util-linux
-          unzip
-          zip
-          reprepro
-          rust-analyzer
-          taplo
-        ] ++ pre-commit-check.enabledPackages;
+        packages = with pkgs;
+          [
+            maturin
+            cargo-about
+            cargo-audit
+            cargo-cyclonedx
+            cargo-deny
+            cargo-llvm-cov
+            cargo-sbom
+            cargo-nextest
+            cosign
+            file
+            gnutar
+            gzip
+            jq
+            minisign
+            nodejs
+            pre-commit
+            rpm
+            util-linux
+            unzip
+            zip
+            reprepro
+            rust-analyzer
+            taplo
+          ]
+          ++ pre-commit-check.enabledPackages;
         shellHook = pre-commit-check.shellHook;
       };
       apps.local-check-fast = {
