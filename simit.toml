@@ -1,4 +1,5 @@
 [ci]
+push_branches = ["trunk", "simit/update/**"]
 provider = "actions"
 platform = "github"
 runtime = "nix"
