@@ -42,7 +42,7 @@ fn reconstruct_surface<'a>(
     dbg!("Extracting vertices.");
     let result = poisson.reconstruct_mesh();
 
-    Ok(vec_point3_to_pyarray(py, result)?)
+    vec_point3_to_pyarray(py, result)
 }
 
 /// A Python module implemented in Rust.
