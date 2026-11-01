@@ -37,7 +37,9 @@
         inherit pkgs;
         buildPackageSet = pkgs.buildPackages;
         sccachePackage = harbor-rs.packages.${system}.sccache;
-        cacheRoot = null;
+        # Hosted builders have no managed sccache transport, so fall back to
+        # this sandbox-local cache instead of failing closed.
+        cacheRoot = "/build/cache";
         namespaceScope = "canix-rust";
         namespaceGeneration = 5;
       };
